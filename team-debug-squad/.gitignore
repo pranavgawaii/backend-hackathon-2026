@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+backend/venv/
+backend/env/
+.venv/
+
+# Environment
+.env
+backend/.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project Assets
+frontend/assets/ui-screenshot.png

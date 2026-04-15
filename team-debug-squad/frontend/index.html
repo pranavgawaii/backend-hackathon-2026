@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Copy Generator</title>
+    <!-- Geist Font -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-sans/style.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <header class="app-header">
+            <div class="header-top">
+                <div class="logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    Hepticware Backend Hackathon
+                </div>
+                <div class="header-actions">
+                    <div class="db-status">
+                        <span class="status-dot"></span>
+                        DB Connected
+                    </div>
+                    <button class="btn-history-toggle" id="btn-history-toggle" title="View Chat History">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <h1>Premium Campaign Generator</h1>
+            <p class="subtitle">Craft professional ad copy instantly using advanced AI models.</p>
+        </header>
+
+        <main class="main-content">
+            <section class="card form-section">
+                <form id="generator-form">
+                    <div class="form-group">
+                        <label for="product">Product / Offering</label>
+                        <input type="text" id="product" name="product" placeholder="e.g., Enterprise Analytics Software" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="audience">Target Audience</label>
+                        <input type="text" id="audience" name="audience" placeholder="e.g., B2B Tech Founders" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tone">Voice Tone</label>
+                        <div class="select-wrapper">
+                            <select id="tone" name="tone" required>
+                                <option value="" disabled selected>Select appropriate tone</option>
+                                <option value="professional">Professional & Authoritative</option>
+                                <option value="direct">Direct & Clear</option>
+                                <option value="persuasive">Persuasive & Value-Driven</option>
+                                <option value="friendly">Friendly & Engaging</option>
+                            </select>
+                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="generate-btn">
+                        <span class="btn-text">Generate Copy</span>
+                        <div class="btn-loader"></div>
+                    </button>
+                </form>
+
+                <div id="result-container" class="result-container hidden">
+                    <div class="result-header">
+                        <span class="result-badge">Generated Output</span>
+                        <button type="button" class="btn-copy" id="btn-copy-result" title="Copy to clipboard">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <div id="result-content" class="result-content"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- History Sliding Panel -->
+    <div class="history-overlay" id="history-overlay"></div>
+    <div class="history-panel" id="history-panel">
+        <div class="history-panel-header">
+            <div class="section-title" style="margin-bottom: 0;">
+                <svg class="title-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <h2 style="font-size: 1.1rem;">Chat History</h2>
+            </div>
+            <button class="btn-close-history" id="btn-close-history" title="Close">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="history-panel-content">
+            <div id="history-container" class="history-list"></div>
+            <div id="history-loader" class="history-loader">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
