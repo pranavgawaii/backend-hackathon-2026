@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campaign Copy Generator</title>
-    <!-- Geist Font -->
+    <title>CopyGen AI — Premium Campaign & Follow-up Generator</title>
+    <meta name="description" content="Generate professional ad copy and B2B follow-up emails instantly with AI.">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-sans/style.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -21,44 +21,46 @@
                         <span class="status-dot"></span>
                         DB Connected
                     </div>
-                    <button class="btn-history-toggle" id="btn-history-toggle" title="View Chat History">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                    </button>
+                    <a href="history.html" class="btn-history-toggle" title="View Generation History">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        History
+                    </a>
                 </div>
             </div>
             <h1>Premium Campaign Generator</h1>
-            <p class="subtitle">Craft professional ad copy instantly using advanced AI models.</p>
+            <p class="subtitle">Craft professional ad copy and follow-up emails instantly using advanced AI.</p>
         </header>
 
+        <nav class="app-nav">
+            <button class="nav-tab active" data-target="campaign">Campaign Copy</button>
+            <button class="nav-tab" data-target="followup">Follow-up Email</button>
+        </nav>
+
         <main class="main-content">
-            <section class="card form-section">
+            <!-- Campaign Copy Section -->
+            <section id="campaign-section" class="card form-section">
                 <form id="generator-form">
                     <div class="form-group">
                         <label for="product">Product / Offering</label>
                         <input type="text" id="product" name="product" placeholder="e.g., Enterprise Analytics Software" required>
                     </div>
-
                     <div class="form-group">
                         <label for="audience">Target Audience</label>
                         <input type="text" id="audience" name="audience" placeholder="e.g., B2B Tech Founders" required>
                     </div>
-
                     <div class="form-group">
                         <label for="tone">Voice Tone</label>
                         <div class="select-wrapper">
                             <select id="tone" name="tone" required>
                                 <option value="" disabled selected>Select appropriate tone</option>
-                                <option value="professional">Professional & Authoritative</option>
-                                <option value="direct">Direct & Clear</option>
-                                <option value="persuasive">Persuasive & Value-Driven</option>
-                                <option value="friendly">Friendly & Engaging</option>
+                                <option value="professional">Professional &amp; Authoritative</option>
+                                <option value="direct">Direct &amp; Clear</option>
+                                <option value="persuasive">Persuasive &amp; Value-Driven</option>
+                                <option value="friendly">Friendly &amp; Engaging</option>
                             </select>
                             <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                         </div>
                     </div>
-
                     <button type="submit" class="btn-primary" id="generate-btn">
                         <span class="btn-text">Generate Copy</span>
                         <div class="btn-loader"></div>
@@ -76,29 +78,44 @@
                     <div id="result-content" class="result-content"></div>
                 </div>
             </section>
-        </main>
-    </div>
 
-    <!-- History Sliding Panel -->
-    <div class="history-overlay" id="history-overlay"></div>
-    <div class="history-panel" id="history-panel">
-        <div class="history-panel-header">
-            <div class="section-title" style="margin-bottom: 0;">
-                <svg class="title-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                <h2 style="font-size: 1.1rem;">Chat History</h2>
-            </div>
-            <button class="btn-close-history" id="btn-close-history" title="Close">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
-        </div>
-        <div class="history-panel-content">
-            <div id="history-container" class="history-list"></div>
-            <div id="history-loader" class="history-loader">
-                <div class="spinner"></div>
-            </div>
-        </div>
+            <!-- Follow-up Email Section -->
+            <section id="followup-section" class="card form-section hidden">
+                <form id="followup-form">
+                    <div class="form-group">
+                        <label for="f-prospect">Prospect Name</label>
+                        <input type="text" id="f-prospect" name="prospect" placeholder="e.g., Alex Johnson" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="f-email">Prospect Email</label>
+                        <input type="email" id="f-email" name="email" placeholder="e.g., alex@company.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="f-interaction">Last Interaction Summary</label>
+                        <input type="text" id="f-interaction" name="last_interaction" placeholder="e.g., Discussed analytics dashboard on Zoom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="f-days">Days Since Interaction</label>
+                        <input type="number" id="f-days" name="days_since" value="1" min="0" required>
+                    </div>
+                    <button type="submit" class="btn-primary" id="f-generate-btn">
+                        <span class="btn-text">Generate Email</span>
+                        <div class="btn-loader"></div>
+                    </button>
+                </form>
+
+                <div id="f-result-container" class="result-container hidden">
+                    <div class="result-header">
+                        <span class="result-badge">Email Draft</span>
+                        <button type="button" class="btn-copy" id="f-btn-copy-result" title="Copy to clipboard">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <div id="f-result-content" class="result-content"></div>
+                </div>
+            </section>
+        </main>
     </div>
 
     <script src="script.js"></script>

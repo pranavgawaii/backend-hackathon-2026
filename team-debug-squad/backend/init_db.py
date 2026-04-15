@@ -19,6 +19,17 @@ try:
         created_at TIMESTAMP NOT NULL
     );
     """)
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS followups (
+        id SERIAL PRIMARY KEY,
+        prospect VARCHAR(255) NOT NULL,
+        last_interaction TEXT NOT NULL,
+        days_since INTEGER NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        email_content TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL
+    );
+    """)
     conn.commit()
     print("Table ensured.")
 except Exception as e:

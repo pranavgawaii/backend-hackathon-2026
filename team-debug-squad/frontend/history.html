@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generation History · CopyGen AI</title>
+    <meta name="description" content="View all your AI-generated campaign copies and follow-up email drafts.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-sans/style.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ── History Page Specific ─────────────────────────────── */
+        .history-page-layout {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+
+        .history-page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 48px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .history-page-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .btn-back:hover {
+            color: var(--text-primary);
+            border-color: var(--text-muted);
+            background: var(--bg-muted);
+        }
+
+        .page-title-group h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin: 0;
+        }
+
+        .page-title-group p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 4px 0 0;
+        }
+
+        .history-stats {
+            display: flex;
+            gap: 12px;
+        }
+
+        .stat-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .stat-badge .stat-count {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* ── Tabs ──────────────────────────────────────────────── */
+        .history-tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 32px;
+        }
+
+        .history-tab {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 10px 18px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            margin-bottom: -1px;
+            transition: all 0.18s ease;
+        }
+
+        .history-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .history-tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--text-primary);
+        }
+
+        /* ── Cards Grid ────────────────────────────────────────── */
+        .history-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .history-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .history-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--text-muted);
+        }
+
+        .history-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .history-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .meta-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .meta-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            text-transform: capitalize;
+        }
+
+        .meta-tag.campaign {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .meta-tag.followup {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .history-card-timestamp {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .history-card-sub {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .history-card-body {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            line-height: 1.65;
+            background: var(--bg-page);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            white-space: pre-wrap;
+        }
+
+        .history-card-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 14px;
+        }
+
+        .btn-copy-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            background: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-copy-card:hover {
+            color: var(--text-primary);
+            border-color: var(--text-muted);
+            background: var(--bg-muted);
+        }
+
+        /* ── Empty & Loading ───────────────────────────────────── */
+        .history-loading,
+        .history-empty {
+            text-align: center;
+            padding: 64px 24px;
+            color: var(--text-secondary);
+        }
+
+        .history-empty .empty-icon {
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .history-empty h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .history-empty p {
+            font-size: 0.9rem;
+        }
+
+        .history-loading .spinner {
+            margin: 0 auto 16px;
+        }
+
+        .tab-section { display: none; }
+        .tab-section.active { display: block; }
+    </style>
+</head>
+<body>
+    <div class="history-page-layout">
+
+        <!-- Header -->
+        <header class="history-page-header">
+            <div class="history-page-header-left">
+                <a href="index.html" class="btn-back">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    Back
+                </a>
+                <div class="page-title-group">
+                    <h1>Generation History</h1>
+                    <p>All your AI-generated campaigns and follow-up emails</p>
+                </div>
+            </div>
+            <div class="history-stats">
+                <div class="stat-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                    <span class="stat-count" id="campaign-count">—</span> Campaigns
+                </div>
+                <div class="stat-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span class="stat-count" id="followup-count">—</span> Follow-ups
+                </div>
+            </div>
+        </header>
+
+        <!-- Tabs -->
+        <nav class="history-tabs">
+            <button class="history-tab active" data-tab="campaigns">
+                Campaign Copies
+            </button>
+            <button class="history-tab" data-tab="followups">
+                Follow-up Emails
+            </button>
+        </nav>
+
+        <!-- Campaign Tab -->
+        <div class="tab-section active" id="tab-campaigns">
+            <div id="campaigns-loading" class="history-loading">
+                <div class="spinner"></div>
+                <p>Loading campaigns…</p>
+            </div>
+            <div id="campaigns-grid" class="history-grid" style="display:none;"></div>
+            <div id="campaigns-empty" class="history-empty" style="display:none;">
+                <div class="empty-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                </div>
+                <h3>No campaigns yet</h3>
+                <p>Generate your first campaign copy from the home page.</p>
+            </div>
+        </div>
+
+        <!-- Followup Tab -->
+        <div class="tab-section" id="tab-followups">
+            <div id="followups-loading" class="history-loading">
+                <div class="spinner"></div>
+                <p>Loading follow-ups…</p>
+            </div>
+            <div id="followups-grid" class="history-grid" style="display:none;"></div>
+            <div id="followups-empty" class="history-empty" style="display:none;">
+                <div class="empty-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </div>
+                <h3>No follow-ups yet</h3>
+                <p>Draft your first follow-up email from the home page.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const API_BASE = "http://localhost:8000";
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function formatDate(iso) {
+            if (!iso) return "";
+            const d = new Date(iso);
+            return d.toLocaleString("en-IN", {
+                day: "numeric", month: "short", year: "numeric",
+                hour: "2-digit", minute: "2-digit"
+            });
+        }
+
+        function copyText(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = "Copied!";
+                setTimeout(() => {
+                    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy`;
+                }, 2000);
+            });
+        }
+
+        function buildCopyBtn(text) {
+            const btn = document.createElement('button');
+            btn.className = 'btn-copy-card';
+            btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy`;
+            btn.addEventListener('click', () => copyText(text, btn));
+            return btn;
+        }
+
+        // ── Load Campaigns ──────────────────────────────────────────
+        async function loadCampaigns() {
+            try {
+                const res = await fetch(`${API_BASE}/campaign-copy`);
+                const data = await res.json();
+
+                document.getElementById('campaign-count').textContent = data.length;
+                document.getElementById('campaigns-loading').style.display = 'none';
+
+                if (data.length === 0) {
+                    document.getElementById('campaigns-empty').style.display = 'block';
+                    return;
+                }
+
+                const grid = document.getElementById('campaigns-grid');
+                grid.style.display = 'grid';
+                grid.innerHTML = data.map(item => `
+                    <div class="history-card" data-id="${item.id}">
+                        <div class="history-card-header">
+                            <div class="history-card-meta">
+                                <span class="meta-label">${escapeHtml(item.product)}</span>
+                                <span class="meta-tag campaign">${escapeHtml(item.tone)}</span>
+                            </div>
+                            <span class="history-card-timestamp">${formatDate(item.created_at)}</span>
+                        </div>
+                        <div class="history-card-sub">Audience: ${escapeHtml(item.audience)}</div>
+                        <div class="history-card-body">${escapeHtml(item.copy)}</div>
+                        <div class="history-card-footer" data-copy="${escapeHtml(item.copy)}"></div>
+                    </div>
+                `).join('');
+
+                // Attach copy buttons
+                grid.querySelectorAll('.history-card-footer').forEach(footer => {
+                    footer.appendChild(buildCopyBtn(footer.dataset.copy));
+                });
+
+            } catch (e) {
+                document.getElementById('campaigns-loading').innerHTML =
+                    '<p style="color:var(--error)">Failed to load — is the backend running?</p>';
+            }
+        }
+
+        // ── Load Followups ──────────────────────────────────────────
+        async function loadFollowups() {
+            try {
+                const res = await fetch(`${API_BASE}/followups`);
+                const data = await res.json();
+
+                document.getElementById('followup-count').textContent = data.length;
+                document.getElementById('followups-loading').style.display = 'none';
+
+                if (data.length === 0) {
+                    document.getElementById('followups-empty').style.display = 'block';
+                    return;
+                }
+
+                const grid = document.getElementById('followups-grid');
+                grid.style.display = 'grid';
+                grid.innerHTML = data.map(item => `
+                    <div class="history-card" data-id="${item.id}">
+                        <div class="history-card-header">
+                            <div class="history-card-meta">
+                                <span class="meta-label">${escapeHtml(item.prospect)}</span>
+                                <span class="meta-tag followup">Follow-up</span>
+                            </div>
+                            <span class="history-card-timestamp">${formatDate(item.created_at)}</span>
+                        </div>
+                        <div class="history-card-sub">
+                            <strong>Email:</strong> ${escapeHtml(item.email)} &nbsp;·&nbsp;
+                            <strong>Last interaction:</strong> ${escapeHtml(item.last_interaction)} &nbsp;·&nbsp;
+                            <strong>${item.days_since}d ago</strong>
+                        </div>
+                        <div class="history-card-body">${escapeHtml(item.email_content)}</div>
+                        <div class="history-card-footer" data-copy="${escapeHtml(item.email_content)}"></div>
+                    </div>
+                `).join('');
+
+                grid.querySelectorAll('.history-card-footer').forEach(footer => {
+                    footer.appendChild(buildCopyBtn(footer.dataset.copy));
+                });
+
+            } catch (e) {
+                document.getElementById('followups-loading').innerHTML =
+                    '<p style="color:var(--error)">Failed to load — is the backend running?</p>';
+            }
+        }
+
+        // ── Tab Switching ───────────────────────────────────────────
+        document.querySelectorAll('.history-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.history-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+            });
+        });
+
+        // ── Init ────────────────────────────────────────────────────
+        loadCampaigns();
+        loadFollowups();
+    </script>
+</body>
+</html>
